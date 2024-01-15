@@ -1,0 +1,6 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+[type="text"]:focus {
+  box-shadow: none !important;
+}
