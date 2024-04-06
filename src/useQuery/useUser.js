@@ -74,6 +74,7 @@ const fetchDataId = async (id) => {
   const headers = getHeaders();
 
   try {
+    if (!id) return {};
     const result = await axios.get(`${import.meta.env.VITE_BASE_URL}/userId`, {
       headers,
       params: { _id: id },

@@ -15,6 +15,8 @@ import ModelAccount from "./model/ModelAccount";
 import logoMain from "../assets/logo123.png";
 import ModelSearch from "./model/ModelSearch";
 import { useProductSearch } from "../useQuery/useProducts";
+import { useUserId } from "../useQuery/useUser";
+import { CommonLoadingModal } from "../components/model/LoadingModel";
 
 function Header() {
   const [showModel, setShowModel] = useState(false);
@@ -72,6 +74,9 @@ function Header() {
       setValueSearch(value);
     }
   };
+  const { data: dataUser, isLoading } = useUserId(
+    localStorage.getItem("userId") ?? ""
+  );
   return (
     <header>
       <nav className="bg-white border-[#0172bc] border-b-[1px]">
@@ -131,7 +136,7 @@ function Header() {
                   <Avatar
                     onClick={() => setShowModel(true)}
                     alt="Remy Sharp"
-                    src="/static/images/avatar/1.jpg"
+                    src={dataUser?.image}
                   />
                   {showModel && (
                     <ModelAccount
@@ -208,6 +213,7 @@ function Header() {
           </div>
         </div>
       </nav>
+      <CommonLoadingModal isLoadingModalOpen={isLoading || isLoadingProduct} />
     </header>
   );
 }
