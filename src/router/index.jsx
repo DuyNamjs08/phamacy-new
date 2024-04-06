@@ -3,10 +3,11 @@ const TRANG_CHU = "/";
 const GIOI_THIEU = "/gioi-thieu";
 const LIEN_HE = "/lien-he";
 const SAN_PHAM = "/san-pham";
-// const CONNECT = "/connect";
-// const INTRO = "/intro";
-// const BENH_NHAN = "/benh-nhan";
-// const DON_THUOC = "/don-thuoc";
+const ORDER = "/don-hang";
+const PAYMENT = "/dat-hang-nhanh";
+const TIN_TUC = "/tin-tuc";
+const TAI_KHOAN = "/tai-khoan";
+const DIEU_KHOAN = "/dieu-khoan";
 
 const RouterWeb = [
   {
@@ -19,6 +20,40 @@ const RouterWeb = [
     id: 2,
     path: GIOI_THIEU,
     component: <Pages.IntroPage />,
+    role: ["1", "2", "3"],
+  },
+  {
+    id: 23,
+    path: TIN_TUC,
+    component: <Pages.PostOutlet />,
+    role: ["1", "2", "3"],
+    child: [
+      {
+        path: "",
+        component: <Pages.Post />,
+      },
+      {
+        path: ":id",
+        component: <Pages.PostDetail />,
+      },
+    ],
+  },
+  {
+    id: 23,
+    path: TAI_KHOAN,
+    component: <Pages.Account />,
+    role: ["1", "2", "3"],
+  },
+  {
+    id: 299,
+    path: ORDER,
+    component: <Pages.Order />,
+    role: ["1", "2", "3"],
+  },
+  {
+    id: 290,
+    path: PAYMENT,
+    component: <Pages.Payment />,
     role: ["1", "2", "3"],
   },
   {
@@ -37,36 +72,8 @@ const RouterWeb = [
       },
     ],
   },
-  //   {
-  //     id: 4,
-  //     path: BLOG,
-  //     role: ["1", "2"],
-  //     component: <Pages.BillTotals />,
-  //     child: [
-  //       {
-  //         path: "",
-  //         component: <Pages.Blog />,
-  //       },
-  //       {
-  //         path: ":id",
-  //         component: <Pages.BlogDetails />,
-  //       },
-  //     ],
-  //   },
-  //   {
-  //     id: 5,
-  //     path: CONNECT,
-  //     role: ["1", "2"],
-  //     component: <Pages.Connect />,
-  //   },
-  //   {
-  //     id: 6,
-  //     path: INTRO,
-  //     role: ["1"],
-  //     component: <Pages.Intro />,
-  //   },
   { id: 7, role: ["1", "2"], path: LIEN_HE, component: <Pages.ContactPage /> },
-  //   { id: 8, path: DON_THUOC, role: ["3"], component: <Pages.Pamacy /> },
+  { id: 8, path: DIEU_KHOAN, role: ["1"], component: <Pages.Provisin /> },
 ];
 
 export default RouterWeb;

@@ -4,6 +4,7 @@ import RouterWeb from "./router";
 import { Routes, Route, Navigate } from "react-router-dom";
 import Pages from "./page";
 import { ToastContainer } from "react-toastify";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 function App() {
   const token = localStorage.getItem("token");
@@ -13,72 +14,75 @@ function App() {
     // return token ? children : <Navigate to='/login' />
     return children;
   };
+  const queryClient = new QueryClient();
   return (
     <>
-      <Routes>
-        <Route path="register" element={"hello"} />
-        <Route path="login" element={"hello"} />
-        <Route
-          path="/"
-          element={
-            <Layout>
-              <Pages.HomePage />
-            </Layout>
-          }
-        />
-        {RouterWeb.map((item) => {
-          if (!item.child) {
-            return (
-              <Route
-                key={item.id}
-                path={item.path}
-                element={
-                  <AuthAccount>
-                    <Layout>{item.component} </Layout>{" "}
-                  </AuthAccount>
-                }
-              />
-            );
-          } else if (item.child) {
-            return (
-              <Route
-                key={item.id}
-                path={item.path}
-                element={
-                  <AuthAccount>
-                    <Layout>{item.component} </Layout>{" "}
-                  </AuthAccount>
-                }
-              >
-                {item.child.map((child, index) => {
-                  return (
-                    <Route
-                      exact
-                      path={child.path}
-                      key={index}
-                      element={child.component}
-                    />
-                  );
-                })}
-              </Route>
-            );
-          }
-        })}
+      <QueryClientProvider client={queryClient} contextSharing={true}>
+        <Routes>
+          <Route path="dang-ki" element={<Pages.SignUp />} />
+          <Route path="dang-nhap" element={<Pages.Login />} />
+          <Route
+            path="/"
+            element={
+              <Layout>
+                <Pages.HomePage />
+              </Layout>
+            }
+          />
+          {RouterWeb.map((item) => {
+            if (!item.child) {
+              return (
+                <Route
+                  key={item.id}
+                  path={item.path}
+                  element={
+                    <AuthAccount>
+                      <Layout>{item.component} </Layout>{" "}
+                    </AuthAccount>
+                  }
+                />
+              );
+            } else if (item.child) {
+              return (
+                <Route
+                  key={item.id}
+                  path={item.path}
+                  element={
+                    <AuthAccount>
+                      <Layout>{item.component} </Layout>{" "}
+                    </AuthAccount>
+                  }
+                >
+                  {item.child.map((child, index) => {
+                    return (
+                      <Route
+                        exact
+                        path={child.path}
+                        key={index}
+                        element={child.component}
+                      />
+                    );
+                  })}
+                </Route>
+              );
+            }
+          })}
 
-        {/* <Route path="*" element={<Pages.Notfound />} /> */}
-      </Routes>
-      <ToastContainer
-        position="top-right"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-      />
+          {/* <Route path="*" element={<Pages.Notfound />} /> */}
+        </Routes>
+        <ToastContainer
+          position="top-right"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="light"
+        />
+      </QueryClientProvider>
     </>
   );
 }

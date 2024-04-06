@@ -9,7 +9,7 @@ import "./style.css";
 const CarouselCmp = ({ dataProductHot }) => {
   const [size, setSize] = useState(5);
   const settings = {
-    dots: true,
+    dots: false,
     infinite: true,
     speed: 500,
     slidesToShow: size,
@@ -86,11 +86,7 @@ const CarouselCmp = ({ dataProductHot }) => {
         {dataProductHot?.map((item) => {
           return (
             <div key={item.id}>
-              <CardCarouselCmp
-                img={item.img}
-                title={item.title}
-                price={item.price}
-              />
+              <CardCarouselCmp item={item} />
             </div>
           );
         })}

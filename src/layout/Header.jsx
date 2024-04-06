@@ -1,22 +1,30 @@
 /* eslint-disable no-unused-vars */
 import { useState } from "react";
-import logo from "../assets/image/logomain.jpg";
+
 import styled from "styled-components";
 import { headerData } from "../constant";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Button from "../components/button/Button";
 import SearchCmp from "../components/search/SearchCmp";
 import BadgeCmp from "../components/badge/BadgeCmp";
+import { useOnOutsideClick } from "../hook/use-outside";
+import Avatar from "@mui/material/Avatar";
+import ModelAccount from "./model/ModelAccount";
+import logoMain from "../assets/logo123.png";
+import ModelSearch from "./model/ModelSearch";
+import { useProductSearch } from "../useQuery/useProducts";
 
 function Header() {
+  const [showModel, setShowModel] = useState(false);
   const [data, setData] = useState([]);
   const [active, setActive] = useState(1);
   const role = localStorage.getItem("role");
   const token = localStorage.getItem("token");
   const [scrollY, setScrollY] = useState(0);
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     setData(headerData.filter((item) => item.role.includes("1")));
@@ -32,9 +40,6 @@ function Header() {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
-  const headerStyle = {
-    boxShadow: scrollY > 40 ? "0px 2px 2px rgba(0, 0, 0, 0.1)" : "none",
-  };
   const [isFixed, setIsFixed] = useState(false);
 
   useEffect(() => {
@@ -50,17 +55,40 @@ function Header() {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
+  const [showModelSearch, setShowModelSearch] = useState(false);
+  const [valueSearch, setValueSearch] = useState("");
+  const [value, setValue] = useState("");
+  const { innerBorderRef } = useOnOutsideClick(() => setShowModel(false));
+  const { data: dataProduct, isLoading: isLoadingProduct } = useProductSearch({
+    offset: 0,
+    productName: valueSearch,
+  });
+  const { innerBorderRef: innerBorderRefSearch } = useOnOutsideClick(() =>
+    setShowModelSearch(false)
+  );
+  const handleSearch = () => {
+    if (value) {
+      setShowModelSearch(true);
+      setValueSearch(value);
+    }
+  };
   return (
     <header>
       <nav className="bg-white border-[#0172bc] border-b-[1px]">
         <div className=" flex flex-col items-end  justify-end mx-auto max-w-screen-xl mb-1 py-2">
-          <div>
-            <Button text={"Đăng nhập"} />
-            <Button
-              text={"Tạo tài khoản"}
-              className={"bg-red-700 hover:bg-red-800"}
-            />
-          </div>
+          {!localStorage.getItem("userId") && (
+            <div>
+              <Button
+                onclick={() => navigate("/dang-nhap")}
+                text={"Đăng nhập"}
+              />
+              <Button
+                text={"Tạo tài khoản"}
+                onclick={() => navigate("/dang-ki")}
+                className={"bg-red-700 hover:bg-red-800"}
+              />
+            </div>
+          )}
           <div className="px-5 text-[14px] md:text-[16px]">
             Hotline:{" "}
             <a className="text-blue-400 underline" href="tel:0866621957">
@@ -69,27 +97,50 @@ function Header() {
           </div>
         </div>
         <div
-          className={`bg-[#0172bc] py-4 px-3 text-white ${
+          className={`bg-[#1B3C73] px-3 text-white ${
             isFixed ? "fixed top-0 left-0 w-full z-50" : ""
           }`}
         >
           <div className="flex flex-wrap justify-between items-center mx-auto max-w-screen-xl gap-2 sm:gap-0">
             <div className="flex justify-center w-full mr-[40px] md:w-auto md:mr-0">
-              <a href="https://flowbite.com" className="flex items-center">
+              <Link to={"/"}>
                 <img
-                  src="https://flowbite.com/docs/images/logo.svg"
-                  className="mr-3 h-6 sm:h-9"
-                  alt="Flowbite Logo"
+                  src={logoMain}
+                  alt=""
+                  className="object-cover h-[81px] w-[200px]"
                 />
-                <span className="self-center text-xl font-semibold whitespace-nowrap dark:text-white">
-                  Flowbite
-                </span>
-              </a>
+              </Link>
             </div>
             <div className="flex items-center lg:order-2 flex-wrap justify-between w-full md:w-auto">
               <div className="flex gap-2">
-                <SearchCmp />
+                <div className="relative">
+                  <SearchCmp
+                    onClick={handleSearch}
+                    value={value}
+                    setValue={setValue}
+                  />
+                  <div ref={innerBorderRefSearch}>
+                    {showModelSearch && (
+                      <ModelSearch data={dataProduct?.data ?? []} />
+                    )}
+                  </div>
+                </div>
+
                 <BadgeCmp />
+                <div ref={innerBorderRef} className="cursor-pointer ml-3">
+                  <Avatar
+                    onClick={() => setShowModel(true)}
+                    alt="Remy Sharp"
+                    src="/static/images/avatar/1.jpg"
+                  />
+                  {showModel && (
+                    <ModelAccount
+                      setActive={setActive}
+                      active={active}
+                      setShowModel={setShowModel}
+                    />
+                  )}
+                </div>
               </div>
               <button
                 data-collapse-toggle="mobile-menu-2"
@@ -135,13 +186,19 @@ function Header() {
                     <li key={item.id}>
                       <Link
                         to={item.path}
-                        className={`block py-2 pr-4 pl-3 text-white rounded bg-blue-700 lg:bg-transparent lg:text-primary-700 lg:p-0 dark:text-white ${
-                          active === item.id ? "bg-red-500" : ""
-                        }`}
+                        className={`block py-2 pr-4 pl-3 text-white rounded bg-blue-700 lg:bg-transparent lg:text-primary-700 lg:p-0 dark:text-white `}
                         aria-current="page"
                         onClick={() => setActive(item.id)}
                       >
-                        {item.title}
+                        <div
+                          className={`${
+                            location.pathname === item.path
+                              ? "text-[#b7494a]"
+                              : ""
+                          }`}
+                        >
+                          {item.title}
+                        </div>
                       </Link>
                     </li>
                   );

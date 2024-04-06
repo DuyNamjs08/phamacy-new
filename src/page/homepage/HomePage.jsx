@@ -2,23 +2,33 @@ import BannerCmp from "../../components/banner/BannerCmp";
 import logo4 from "../../assets/slider/5.webp";
 import logo5 from "../../assets/slider/6.webp";
 import CardSmallCmp from "../../components/cardSmall/CardSmallCmp";
-import {
-  dataCategory,
-  dataTranistion,
-  dataProductHot,
-  dataProduct,
-} from "../../constant";
-import CarouselCmp from "../../components/carousel/carouselCmp";
+import { dataTranistion } from "../../constant";
 import CardCarouselCmp from "../../components/cardCarousel/cardCarouselCmp";
 import Button from "../../components/button/Button";
 import { useState } from "react";
 import ButtonLinkCmp from "../../components/buttonLink/ButtonLinkCmp";
 import cardT from "../../assets/banner/2.png";
 import CardHoriCmp from "../../components/cardHori/CardHoriCmp";
+import useScrollToTopOnMount from "../../hook/useScrollToTopOnMount";
+import { useCategory } from "../../useQuery/useCategory";
+import { useProduct } from "../../useQuery/useProducts";
+import { CommonLoadingModal } from "../../components/model/LoadingModel";
+import CarouselCmp1 from "../../components/carousel1/carouselCmp1";
+import { usePosts } from "../../useQuery/usePosts";
+import { Link, useNavigate } from "react-router-dom";
 
 const HomePage = () => {
+  const navigate = useNavigate();
   const [size, setSize] = useState(8);
-  const visibleProducts = dataProduct.slice(0, size);
+  useScrollToTopOnMount();
+  const { data, isLoading } = useCategory();
+  const { data: dataPost, isLoading: isLoaddingPost } = usePosts();
+  const { data: dataListproduct, isLoading: isLoadingListproduct } = useProduct(
+    {
+      limit: size,
+      offset: 0,
+    }
+  );
   return (
     <>
       <div className="p-[20px] max-w-screen-xl mx-auto">
@@ -49,32 +59,35 @@ const HomePage = () => {
       <div className="bg-gray-100">
         <div className="max-w-screen-xl mx-auto ">
           <div className="grid-cols-2 grid gap-4 p-4 md:grid-cols-4">
-            {dataCategory.map((item) => {
-              return (
-                <div
-                  key={item.id}
-                  className=" flex items-center cursor-pointer"
-                >
-                  <CardSmallCmp
-                    img={item.img}
-                    title={item.title}
-                    hight={"120px"}
-                    width={"120px"}
-                  />
-                </div>
-              );
-            })}
+            {data &&
+              data?.data?.map((item) => {
+                return (
+                  <div
+                    key={item._id}
+                    className=" flex items-center cursor-pointer"
+                  >
+                    <CardSmallCmp
+                      img={item.image}
+                      title={item.name}
+                      hight={"120px"}
+                      width={"120px"}
+                    />
+                  </div>
+                );
+              })}
           </div>
         </div>
       </div>
       {/* product */}
       <div className="bg-white h-[30px]"></div>
       <div className="bg-gray-100 pb-[30px] h-[520px]">
-        <div className="max-w-screen-xl mx-auto ">
+        <div className="max-w-screen-xl mx-auto">
           <div className="px-[10px] pt-4 text-2xl font-bold">
             Sản phẩm bán chạy
           </div>
-          <CarouselCmp dataProductHot={dataProductHot} />
+          <CarouselCmp1
+            dataProductHot={dataListproduct && dataListproduct.data}
+          />
         </div>
       </div>
       {/* product hot */}
@@ -83,11 +96,20 @@ const HomePage = () => {
         <div className="max-w-screen-xl mx-auto ">
           <div className="px-[10px] pt-4 text-2xl font-bold">Sản phẩm mới</div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
-            {visibleProducts.map((item, index) => (
-              <div key={index}>
-                <CardCarouselCmp img={item.img} />
-              </div>
-            ))}
+            {dataListproduct &&
+              dataListproduct?.data?.map((item, index) => (
+                <div
+                  key={index}
+                  className="cursor-pointer"
+                  onClick={() =>
+                    navigate(
+                      `/san-pham/${item?._id}?category_id=${item?.category_id}`
+                    )
+                  }
+                >
+                  <CardCarouselCmp item={item} />
+                </div>
+              ))}
           </div>
           <div className="flex justify-center">
             {" "}
@@ -108,29 +130,33 @@ const HomePage = () => {
         <div className="max-w-screen-xl mx-auto ">
           <div className="flex justify-between mb-4">
             <div className="px-[10px] pt-4 text-2xl font-bold">Tin tức</div>
-            <ButtonLinkCmp text={"Xem thêm"} />
+            <Link to={"tin-tuc"}>
+              <ButtonLinkCmp text={"Xem thêm"} />
+            </Link>
           </div>
           <div className="grid grid-cols-2 gap-2 md:grid-cols-4">
-            {Array.from({ length: 4 })
-              .fill("namdz")
-              .map((item, index) => (
-                <div key={index}>
-                  <CardSmallCmp
-                    img={cardT}
-                    title={
-                      "Life-Space Shape B420 Probiotic - Men vi sinh hỗ trợ kiểm soát cân nặng, bụng khỏe dáng cân đối"
-                    }
-                    hight={"100%"}
-                    width={"100%"}
-                    classtext={" !text-black "}
-                  />
-                </div>
-              ))}
+            {dataPost
+              ? dataPost.map((item, index) => (
+                  <div
+                    key={index}
+                    className="cursor-pointer"
+                    onClick={() => navigate("/tin-tuc/" + item._id)}
+                  >
+                    <CardSmallCmp
+                      img={cardT}
+                      title={item.name}
+                      hight={"100%"}
+                      width={"100%"}
+                      classtext={" !text-black "}
+                    />
+                  </div>
+                ))
+              : ""}
           </div>
         </div>
       </div>
       {/* thuong hieu noi bat */}
-      <div className="bg-white h-[30px]"></div>
+      {/* <div className="bg-white h-[30px]"></div>
       <div className="bg-gray-100 pb-[30px]">
         <div className="max-w-screen-xl mx-auto ">
           <div className="flex justify-between mb-4">
@@ -144,7 +170,7 @@ const HomePage = () => {
               .fill("namdz")
               .map((item, index) => (
                 <div key={index}>
-                  {/* <CardSmallCmp
+                  <CardSmallCmp
                     img={cardT}
                     title={
                       "Life-Space Shape B420 Probiotic - Men vi sinh hỗ trợ kiểm soát cân nặng, bụng khỏe dáng cân đối"
@@ -152,12 +178,12 @@ const HomePage = () => {
                     hight={"100%"}
                     width={"100%"}
                     classtext={"!text-black "}
-                  /> */}
+                  />
                 </div>
               ))}
           </div>
         </div>
-      </div>
+      </div> */}
       {/* van chuyen */}
       <div className="bg-white h-[30px]"></div>
       <div className="bg-gray-100 pb-[30px]">
@@ -166,7 +192,9 @@ const HomePage = () => {
             <div className="px-[10px] pt-4 text-2xl font-bold">
               Thông tin vận chuyển
             </div>
-            <ButtonLinkCmp text={"Xem thêm"} />
+            <Link to={"lien-he"}>
+              <ButtonLinkCmp text={"Xem thêm"} />
+            </Link>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
             {dataTranistion.map((item, index) => (
@@ -184,6 +212,9 @@ const HomePage = () => {
           </div>
         </div>
       </div>
+      <CommonLoadingModal
+        isLoadingModalOpen={isLoading || isLoadingListproduct || isLoaddingPost}
+      />
     </>
   );
 };
