@@ -13,6 +13,7 @@ import PostDetail from "./post/PostDetail.jsx";
 import PostOutlet from "./post/PostOutlet.jsx";
 import Provisin from "./provision/Provisin.jsx";
 import SignUp from "./register/Register.jsx";
+import NotFoundPage from "./notFoundPage/NotFoundPage.jsx";
 
 export default {
   HomePage,
@@ -30,4 +31,5 @@ export default {
   Account,
   Provisin,
   SignUp,
+  NotFoundPage,
 };

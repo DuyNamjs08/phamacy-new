@@ -17,6 +17,7 @@ import {
 } from "../../feature/homeSlice";
 import useScrollToTopOnMount from "../../hook/useScrollToTopOnMount";
 import { Link } from "react-router-dom";
+import imgNotFound from "../../assets/notFound.gif";
 const paymentData = [
   { label: "Thanh toán tiền mặt", value: "payment_on_delivery" },
   { label: "Chuyển khoản ngân hàng", value: "bank_transfer" },
@@ -53,7 +54,7 @@ const Payment = () => {
   return (
     <>
       <div className="p-[20px] max-w-screen-xl mx-auto">
-        <div className="text-xl font-semibold mb-4">Màn hình thanh toán</div>
+        <div className="text-[28px] font-semibold mb-4">Thanh toán</div>
         {cartItems.length > 0 ? (
           <div className="block md:flex gap-5">
             <div className="md:w-1/2 flex flex-col gap-4">
@@ -232,7 +233,14 @@ const Payment = () => {
             </div>
           </div>
         ) : (
-          <div className="h-[60vh] font-semibold">Bạn chưa có sản phẩm nào</div>
+          <div>
+            <div className="mt-6 font-semibold text-[14px]">
+              Bạn chưa có sản phẩm nào
+            </div>
+            <div className="flex items-center justify-center">
+              <img className="w-[50%]" src={imgNotFound} alt="" />
+            </div>
+          </div>
         )}
       </div>
       <CommonLoadingModal isLoadingModalOpen={isLoadingMethod} />

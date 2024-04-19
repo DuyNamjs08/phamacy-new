@@ -9,6 +9,7 @@ import { calcTotalPriceOrder } from "../../helpers/calcArray";
 import Button from "../../components/button/Button";
 import { useNavigate } from "react-router-dom";
 import useScrollToTopOnMount from "../../hook/useScrollToTopOnMount";
+import imgNotFound from "../../assets/notFound.gif";
 
 const Order = () => {
   const navigate = useNavigate();
@@ -18,7 +19,7 @@ const Order = () => {
   return (
     <>
       <div className="p-[20px] max-w-screen-xl mx-auto min-h-[60vh]">
-        <div className="text-xl font-semibold mb-4">Màn hình đơn hàng</div>
+        <div className="text-[28px] font-semibold mb-4">Đơn hàng</div>
         {cartItems.length > 0 ? (
           <div className="flex gap-5">
             <div className="w-1/2 flex flex-col gap-4">
@@ -127,8 +128,13 @@ const Order = () => {
             </div>
           </div>
         ) : (
-          <div className="font-semibold">
-            Bạn chưa có sản phẩm nào trong giỏ hàng
+          <div>
+            <div className="mt-6 font-semibold text-[14px]">
+              Bạn chưa có sản phẩm nào
+            </div>
+            <div className="flex items-center justify-center">
+              <img className="w-[50%]" src={imgNotFound} alt="" />
+            </div>
           </div>
         )}
       </div>

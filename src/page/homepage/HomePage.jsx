@@ -66,12 +66,14 @@ const HomePage = () => {
                     key={item._id}
                     className=" flex items-center cursor-pointer"
                   >
-                    <CardSmallCmp
-                      img={item.image}
-                      title={item.name}
-                      hight={"120px"}
-                      width={"120px"}
-                    />
+                    <Link to={`/san-pham?category_id=${item._id}`}>
+                      <CardSmallCmp
+                        img={item.image}
+                        title={item.name}
+                        hight={"120px"}
+                        width={"120px"}
+                      />
+                    </Link>
                   </div>
                 );
               })}

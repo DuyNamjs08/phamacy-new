@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import ButtonOrder from "../button/ButtonOrder";
 import { addDot } from "../../helpers/changeNumber";
+import CheckTokenAndUserId from "../../helpers/checkTokenAndUserId";
 
 // eslint-disable-next-line no-unused-vars, react/prop-types
 const CardProduct = ({ img, islogin = true, item = {} }) => {
@@ -26,11 +27,15 @@ const CardProduct = ({ img, islogin = true, item = {} }) => {
           45.000 đ/Hộp
         </div> */}
         <div className="px-3 font-semibold text-[#0172bc]">
-          {addDot(item.price)} <span>đ/Hộp</span>
+          <CheckTokenAndUserId>
+            {addDot(item.price)} <span>đ/Hộp</span>
+          </CheckTokenAndUserId>
         </div>
         {/* button  */}
         <div className="flex items-center justify-center mt-2">
-          <ButtonOrder item={item} />
+          <CheckTokenAndUserId>
+            <ButtonOrder item={item} />
+          </CheckTokenAndUserId>
         </div>
       </div>
     </div>

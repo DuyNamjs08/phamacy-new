@@ -8,11 +8,11 @@ import { addDot } from "../../helpers/changeNumber";
 import { useCategory } from "../../useQuery/useCategory";
 import { CommonLoadingModal } from "../../components/model/LoadingModel";
 import CarouselCmp1 from "../../components/carousel1/carouselCmp1";
+import CheckTokenAndUserId from "../../helpers/checkTokenAndUserId";
 const ProductDetailPage = () => {
   useScrollToTopOnMount();
   const location = useLocation();
   const { data, isLoading } = useProductId(location.pathname.split("/")[2]);
-  console.log(data);
   const { data: dataCategory, isLoading: isisLoadingCategory } = useCategory();
   const { data: dataListproduct, isLoading: isLoadingListproduct } = useProduct(
     location.search.split("=")[1]
@@ -32,15 +32,18 @@ const ProductDetailPage = () => {
             <h3 className="text-[18px] font-semibold">
               {data ? data.productName : ""}
             </h3>
-            <p>
-              <strong className=" text-[20px] font-semibold mt-4 text-blue-700/80">
-                {data ? addDot(data.price) : ""}
-              </strong>{" "}
-              <span className="text-[18px] text-blue-600/80">
-                {" "}
-                / {data ? data.type : ""}
-              </span>
-            </p>
+            <CheckTokenAndUserId>
+              <p>
+                <strong className=" text-[20px] font-semibold mt-4 text-blue-700/80">
+                  {data ? addDot(data.price) : ""}
+                </strong>{" "}
+                <span className="text-[18px] text-blue-600/80">
+                  {" "}
+                  / {data ? data.type : ""}
+                </span>
+              </p>
+            </CheckTokenAndUserId>
+
             {/* <p>
               <strong className=" text-[18px] font-semibold mt-4 text-gray-700/50 line-through">
                 280.000đ
@@ -82,7 +85,11 @@ const ProductDetailPage = () => {
                 <p className="text-[14px]"> {data ? data.color : ""}</p>
               </div>
               <div className="flex mb-3">
-                <ButtonOrder item={data} />
+                {
+                  <CheckTokenAndUserId>
+                    <ButtonOrder item={data} />
+                  </CheckTokenAndUserId>
+                }
               </div>
               <div className="flex mb-3">
                 <p className="text-[14px] min-w-[200px] font-semibold">

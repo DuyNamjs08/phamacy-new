@@ -8,6 +8,8 @@ const PAYMENT = "/dat-hang-nhanh";
 const TIN_TUC = "/tin-tuc";
 const TAI_KHOAN = "/tai-khoan";
 const DIEU_KHOAN = "/dieu-khoan";
+const DANG_NHAP = "/dang-nhap";
+const DANG_KI = "/dang-ki";
 
 const RouterWeb = [
   {
@@ -15,6 +17,18 @@ const RouterWeb = [
     path: TRANG_CHU,
     role: ["1", "2", "3"],
     component: <Pages.HomePage />,
+  },
+  {
+    id: 18081,
+    path: DANG_NHAP,
+    role: ["1", "2", "3"],
+    component: <Pages.Login />,
+  },
+  {
+    id: 18082,
+    path: DANG_KI,
+    role: ["1", "2", "3"],
+    component: <Pages.SignUp />,
   },
   {
     id: 2,

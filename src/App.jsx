@@ -19,8 +19,6 @@ function App() {
     <>
       <QueryClientProvider client={queryClient} contextSharing={true}>
         <Routes>
-          <Route path="dang-ki" element={<Pages.SignUp />} />
-          <Route path="dang-nhap" element={<Pages.Login />} />
           <Route
             path="/"
             element={
@@ -68,7 +66,7 @@ function App() {
             }
           })}
 
-          {/* <Route path="*" element={<Pages.Notfound />} /> */}
+          <Route path="*" element={<Pages.NotFoundPage />} />
         </Routes>
         <ToastContainer
           position="top-right"

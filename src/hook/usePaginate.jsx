@@ -26,5 +26,6 @@ export const usePaginate = () => {
     handleChange,
     limit,
     setSearchParams,
+    searchParams,
   };
 };

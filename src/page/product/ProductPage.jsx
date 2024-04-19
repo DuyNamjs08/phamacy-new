@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-
 import { useProduct } from "../../useQuery/useProducts";
 import CardProduct from "../../components/card/CardProduct";
 import { CommonLoadingModal } from "../../components/model/LoadingModel";
@@ -11,7 +10,7 @@ import { usePaginate } from "../../hook/usePaginate";
 const ProductPage = () => {
   useScrollToTopOnMount();
   const [state, setState] = useState(5);
-  const [categoryId, setCategoryId] = useState("");
+
   const [listCategory, setListCategory] = useState([]);
   const {
     offset,
@@ -21,17 +20,21 @@ const ProductPage = () => {
     setOffset,
     setPage,
     setSearchParams,
+    searchParams,
   } = usePaginate();
   const { data, isLoading, refetch, totalPage } = useProduct({
     limit,
     offset,
-    category_id: categoryId,
+    category_id: searchParams.get("category_id") ?? "",
   });
   const {
     data: dataCategory,
     isLoading: isloadingCategory,
     refetch: refeshCategory,
   } = useCategory();
+  const [categoryId, setCategoryId] = useState(
+    searchParams.get("category_id") ?? ""
+  );
   useEffect(() => {
     if (data) {
       refetch();
@@ -86,7 +89,12 @@ const ProductPage = () => {
                       setCategoryId(item._id);
                       setPage(1);
                       setOffset(0);
-                      setSearchParams({ limit: 5, offset: 0, page: 1 });
+                      setSearchParams({
+                        limit: 5,
+                        offset: 0,
+                        page: 1,
+                        category_id: item._id,
+                      });
                     }}
                     className={` ${
                       categoryId === item._id

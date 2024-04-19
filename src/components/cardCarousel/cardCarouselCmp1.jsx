@@ -1,5 +1,7 @@
 /* eslint-disable react/prop-types */
 
+import CheckTokenAndUserId from "../../helpers/checkTokenAndUserId";
+
 const CardCarouselCmp1 = ({ item }) => {
   return (
     <div className="p-[10px]">
@@ -15,9 +17,11 @@ const CardCarouselCmp1 = ({ item }) => {
         {/* <div className="px-3 text-gray-400 line-through text-[14px] ">
           {item.price} đ/Hộp
         </div> */}
-        <div className="px-3 font-semibold text-[#0172bc]">
-          {item ? item.price : ""}/ {item ? item.type : ""}
-        </div>
+        <CheckTokenAndUserId>
+          <div className="px-3 font-semibold text-[#0172bc]">
+            {item ? item.price : ""}/ {item ? item.type : ""}
+          </div>
+        </CheckTokenAndUserId>
       </div>
     </div>
   );
